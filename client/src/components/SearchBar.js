@@ -16,6 +16,7 @@ class SearchBar extends Component {
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    //this.addToWatchList = this.addToWatchList.bind(this);
   }
 
   handleFormSubmit(e) {
@@ -38,6 +39,20 @@ class SearchBar extends Component {
     this.setState({value: e.target.value});
   }
 
+  // addToWatchList(stock, price) {
+  //   axios.post('/addStock', {
+  //     stock: stock,
+  //     price: price
+  //   })
+  //   .then((response) => {
+  //     console.log(response);
+  //     this.forceUpdate();
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  // }
+
   render() {
     return(
       <div>
@@ -46,7 +61,10 @@ class SearchBar extends Component {
           <button type='submit' value='Submit'>Search</button>
         </form>
         {this.state.renderStockCard &&
-        <StockCard cardData={this.state.cardData}/>
+        <StockCard 
+          cardData={this.state.cardData}
+          //addToWatchList={this.addToWatchList}
+          />
         }
       </div>
     );
