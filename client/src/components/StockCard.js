@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Chart from './Chart';
 import axios from 'axios';
 
 class StockCard extends Component {
@@ -10,6 +11,19 @@ class StockCard extends Component {
     }
   }
 
+  // componentDidMount() {
+  //   this.getChartData();
+  // }
+
+  // getChartData(stock) {
+  //   axios.post('/chartData', {
+  //     stock: stock
+  //   })
+  //   .then(response => {
+  //     console.log(response);
+  //   });
+  // }
+
   addToWatchList(stock, price) {
     axios.post('/addStock', {
       stock: stock,
@@ -18,7 +32,6 @@ class StockCard extends Component {
     .then((response) => {
       console.log(response);
       this.setState({render: true});
-      this.forceUpdate();
     })
     .catch(function (error) {
       console.log(error);
@@ -37,7 +50,12 @@ class StockCard extends Component {
         :
           <button>{this.props.cardData['symbol']} Added</button>
         }
+
+      {this.props.chartData.length > 1 &&
+        <Chart chartData={this.props.chartData}/>
+      }
       </div>
+
     );
   }
 }

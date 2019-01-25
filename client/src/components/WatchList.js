@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 class WatchList extends Component {
 
@@ -11,6 +10,7 @@ class WatchList extends Component {
 
   componentDidMount() {
     this.getWatchList();
+    
   }
 
   getWatchList = () => {

@@ -5,6 +5,7 @@ const ObjectId = require('mongodb').ObjectId;
 const bodyParser= require('body-parser')
 const axios = require('axios')
 const app = express();
+const _ = require('lodash');
 const watchListItem = require('./config/schemas');
 const URL = 'mongodb://ryanjalufka:kijut123@ds013848.mlab.com:13848/stock_tracker';
 var WatchListItem = mongoose.model("WatchList", watchListItem);
@@ -68,6 +69,43 @@ app.delete('/deleteStock', (req, res) => {
     .catch(error => {
         console.log(error);
     });
+  })
+
+  app.post('/chartData', (req, res) => {
+    let stock = req.body.stock;
+    let data;
+    let URL = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${stock}&interval=5min&apikey=NCGXWTJ1X7NQFKBC`;
+    axios.get(URL)
+      .then( response => {
+
+        let data = response.data['Time Series (5min)'];
+        if(data === undefined) {
+          console.log('heres the error', data); 
+          res.send([]);
+          return;
+        } else {
+          console.log('data is definied, apparently:::', data);
+          let dataObj = _.zipObject(Object.keys(data), Object.values(data));
+          let j = Array.from(Array(100).keys());
+          let obj = {}
+          let arr = [];
+          let index = 0;
+          for (var key in dataObj) {
+            arr.push(
+              {
+                label: j[index], //date
+                value: [j[index], dataObj[key]['1. open']]
+              });
+            index++;
+          }
+          obj = {arr};
+          res.send(arr);
+        } 
+    })
+    .catch(error => {
+      console.log(error);
+      res.send([]);
+    })
   })
 
   app.listen(4000, () => console.info(`REST API running on port 4000`));

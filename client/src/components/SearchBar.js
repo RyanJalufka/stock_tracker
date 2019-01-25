@@ -11,15 +11,18 @@ class SearchBar extends Component {
     this.state = {
       value: '',
       cardData: [],
+      chartData: {},
       renderStockCard: null
     }
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    //this.addToWatchList = this.addToWatchList.bind(this);
   }
 
   handleFormSubmit(e) {
+
+    this.setState({chartData: {}, cardData: []})
+
     axios.post('/stockData', {
       stock: this.state.value
     })
@@ -29,29 +32,26 @@ class SearchBar extends Component {
     })
     .catch(function (error) {
       console.log(error);
-    });
+    })
+
+    this.getChartData(this.state.value)
 
     document.getElementById('stock-form').reset();
     e.preventDefault();
   }
 
+  getChartData(stock) {
+    axios.post('/chartData', {
+      stock: stock
+    })
+    .then(response => {
+      this.setState({renderStockCard: true, value: '', chartData: response.data})
+    });
+  }
+
   handleChange(e) {
     this.setState({value: e.target.value});
   }
-
-  // addToWatchList(stock, price) {
-  //   axios.post('/addStock', {
-  //     stock: stock,
-  //     price: price
-  //   })
-  //   .then((response) => {
-  //     console.log(response);
-  //     this.forceUpdate();
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }
 
   render() {
     return(
@@ -63,8 +63,7 @@ class SearchBar extends Component {
         {this.state.renderStockCard &&
         <StockCard 
           cardData={this.state.cardData}
-          //addToWatchList={this.addToWatchList}
-          />
+          chartData={this.state.chartData}/>
         }
       </div>
     );

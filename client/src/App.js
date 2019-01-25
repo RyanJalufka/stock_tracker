@@ -6,12 +6,13 @@ import ClockComponent from './components/Clock';
 
 
 class App extends Component {
+
   render() {
     return (
       <div className="App">
         <ClockComponent />
         <SearchBar />
-        <WatchList />
+        <WatchList/>
       </div>
     );
   }
